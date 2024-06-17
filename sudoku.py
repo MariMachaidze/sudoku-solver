@@ -33,7 +33,7 @@ def find_empty(sudoku):
         for j in range (len(sudoku)):
             if sudoku[i][j] == 0:
                 return (i, j) #row, col
-    return 10, 10
+    return None
 
 def valid(sudoku, row, col, n):
     
@@ -49,8 +49,8 @@ def valid(sudoku, row, col, n):
     return True
 
     # Box
-    for i in range(int(row/3)*3, int(row/3)*3+3):
-        for j in range(int(col/3)*3, int(col/3)*3+3):
+    for i in range(row//3*3, row//3*3+3):
+        for j in range(col//3*3, col//3*3+3):
             #print(i, j)
             if n == sudoku[i][j]:
                 return False
@@ -58,25 +58,23 @@ def valid(sudoku, row, col, n):
     return True
 
 def solver(sudoku):
-    n, m = find_empty(sudoku)
-#    print(n, m)
-    if n == 10 and m == 10:
-        print_board(sudoku)
-        exit()
+    
+    if not find_empty(sudoku):
+        return True
+
+    n, m = find_empty(sudoku) 
+
     for i in range(1,10):
-        if valid(sudoku, n, m, i) == True:
+        if valid(sudoku, n, m, i):
             sudoku[n][m] = i
         #    print(n, m, i)
         #    print_board(sudoku)
-            solver(sudoku)
+            if solver(sudoku):
+                return True
     sudoku[n][m] = 0
-    return
+    return False
 
 
 print_board(board)
-#print(find_empty(board))
-#print(find_row(board, 4, 4, 2))
-#print(find_col(board, 6, 3, 1))
-#print(find_full(board, 1, 1, 3))
 solver(board)
-
+print_board(board)
